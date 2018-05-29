@@ -1,15 +1,18 @@
 <?php
 
-namespace Klepak\RemedyApi;
+namespace Klepak\RemedyApi\Models;
+
+
+use Klepak\RemedyApi\Exceptions\RemedyApiException;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 
-use GuzzleHttp\Psr7;
+
 
 class RemedyCaseEntity
 {
-    public $token = null;
+    private $token = null;
 
     public static function getServer()
     {
@@ -19,36 +22,38 @@ class RemedyCaseEntity
         return env("REMEDYAPI_HOST", false);
     }
 
-    public function __construct()
+    public function request($method, $url, $args = [])
     {
         $client = new Client();
         
         try
         {
-            $res = $client->request('POST', static::getServer() . "/api/jwt/login", [
-                'form_params' => [
-                    'username' => env('REMEDYAPI_USERNAME')."2",
-                    'password' => env('REMEDYAPI_PASSWORD'),
-                ],
-            ]);
+            $res = $client->request($method, static::getServer() . $url, $args);
 
             if($res->getStatusCode() == 200)
             {
-                $this->token = $res->getBody();
-            }
-        }
-        catch(BadResponseException $e)
-        {
-            \Log::info("Remedy login request failed.\n".Psr7\str($e->getRequest()));
-            
-            if(\isJson($e->getResponse()->getBody()))
-            {   
-                echo $e->getResponse()->getBody();
+                return $res;
             }
             else
             {
-                echo $e->getResponse()->getBody();
+                throw new RemedyApiException(null, $res);
             }
         }
+        catch(BadResponseException $e)
+        {            
+            throw new RemedyApiException($e->getRequest(), $e->getResponse());
+        }
+    }
+
+    public function __construct()
+    {
+        $res = $this->request("POST", "/api/jwt/login", [
+            'form_params' => [
+                'username' => env('REMEDYAPI_USERNAME')."2",
+                'password' => env('REMEDYAPI_PASSWORD'),
+            ]
+        ]);
+
+        $this->token = $res->getBody();
     }
 }
