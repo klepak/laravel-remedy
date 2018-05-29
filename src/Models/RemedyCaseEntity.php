@@ -49,7 +49,7 @@ class RemedyCaseEntity
     {
         $res = $this->request("POST", "/api/jwt/login", [
             'form_params' => [
-                'username' => env('REMEDYAPI_USERNAME')."2",
+                'username' => env('REMEDYAPI_USERNAME'),
                 'password' => env('REMEDYAPI_PASSWORD'),
             ]
         ]);
