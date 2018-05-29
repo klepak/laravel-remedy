@@ -3,7 +3,9 @@
 namespace Klepak\RemedyApi;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\BadResponseException;
+
+use GuzzleHttp\Psr7;
 
 class RemedyCaseEntity
 {
@@ -35,17 +37,17 @@ class RemedyCaseEntity
                 $this->token = $res->getBody();
             }
         }
-        catch(ClientException $e)
+        catch(BadResponseException $e)
         {
-            echo "ERR";
-            if(\isJson($res->getBody()))
-            {
-                echo "JSON";
-                echo $res->getBody();
+            \Log::info("Remedy login request failed.\n".Psr7\str($e->getRequest()));
+            
+            if(\isJson($e->getResponse()->getBody()))
+            {   
+                echo $e->getResponse()->getBody();
             }
             else
             {
-                echo $res->getBody();
+                echo $e->getResponse()->getBody();
             }
         }
     }
