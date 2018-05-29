@@ -1,0 +1,30 @@
+{
+    "name": "klepak/laravel-remedy",
+    "description": "Provides integration with Remedy 9 REST API",
+    "authors": [
+        {
+            "name": "Knut Leborg",
+            "email": "knut@lepa.no"
+        }
+    ],
+    "minimum-stability": "dev",
+    
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Klepak\\RemedyApi\\" : "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Klepak\\RemedyApi\\RemedyServiceProvider"
+            ]
+        }
+    }
+}
