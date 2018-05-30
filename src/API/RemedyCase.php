@@ -4,6 +4,8 @@ namespace Klepak\RemedyApi\API;
 
 use Klepak\RemedyApi\Exceptions\RemedyApiException;
 
+use Klepak\RemedyApi\Models\RemedyCase as RemedyModel;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 
@@ -11,10 +13,31 @@ abstract class RemedyCase
 {
     private $token = null;
 
-    // Standardized Field Name => Type-Specific Actual Field Name
+    protected static $interface = null;
+
+    // Standardized Field Name => Type-Specific Variant Field Name
     protected static $createInterfaceFieldMap = [];
     protected static $createInterfaceDefaultFields = [];
+
     protected static $standardInterfaceFieldMap = [];
+
+    private $model = null;
+
+    public function __construct(RemedyModel $model)
+    {
+        $this->model = $model;
+
+        $res = $this->request('POST', '/api/jwt/login', [
+            'form_params' => [
+                'username' => env('REMEDYAPI_USERNAME'),
+                'password' => env('REMEDYAPI_PASSWORD'),
+            ]
+        ], [
+            'Content-Type' => 'application/x-www-form-urlencoded'
+        ]);
+
+        $this->token = $res->getBody();
+    }
 
     public static function getServer()
     {
@@ -60,22 +83,83 @@ abstract class RemedyCase
         }
     }
 
-    public function __construct()
+    public function getVariantFieldName($normalizedField, $map)
     {
-        $res = $this->request('POST', '/api/jwt/login', [
-            'form_params' => [
-                'username' => env('REMEDYAPI_USERNAME'),
-                'password' => env('REMEDYAPI_PASSWORD'),
-            ]
-        ], [
-            'Content-Type' => 'application/x-www-form-urlencoded'
-        ]);
-
-        $this->token = $res->getBody();
+        if(isset($map[$normalizedField]))
+            return $map[$normalizedField];
+        
+        return $normalizedField;
     }
 
-    public function create($data)
+    public function getNormalizedFieldName($field, $map)
     {
-        
+        $reversedFieldMap = [];
+        foreach($map as $normalized => $variant)
+        {
+            $reversedFieldMap[$variant] = $normalized;
+        }
+
+        if(isset($reversedFieldMap[$field]))
+            return $reversedFieldMap[$field];
+
+        return $field;
+    }
+
+    public function getNormalizedCreateInterfaceFieldName($field)
+    {
+        return $this->getNormalizedFieldName($field, static::$createInterfaceFieldMap);
+    }
+
+    public function getNormalizedStandardInterfaceFieldName($field)
+    {
+        return $this->getNormalizedFieldName($field, static::$standardInterfaceFieldMap);
+    }
+
+    public function getCreateInterfaceVariantFieldName($normalizedField)
+    {
+        return $this->getVariantFieldName($normalizedField, static::$createInterfaceFieldMap);
+    }
+
+    public function getStandardInterfaceVariantFieldName($normalizedField)
+    {
+        return $this->getVariantFieldName($normalizedField, static::$standardInterfaceFieldMap);
+    }
+
+    // Transforms normalized data into variant data
+    public function transformNormalizedData($normalizedData)
+    {
+        $variantData = [];
+        foreach($normalizedData as $key => $value)
+        {
+            $variantData[$this->getStandardInterfaceVariantFieldName($key)] = $value;
+        }
+
+        return $variantData;
+    }
+
+    public function update($normalizedData)
+    {
+        $variantData = $this->transformNormalizedData($normalizedData);
+
+        $args = json_encode([
+            'values' => $variantData
+        ]);
+
+        $res = $this->request('PUT', "/api/arsys/v1/entry/{$this->interface}Interface/{$this->model->Entry_ID}|{$this->model->Entry_ID}", $args);
+
+        if($res->getStatusCode() == 204)
+        {
+            return true;
+        }
+        else
+        {
+            throw new RemedyApiException(null, $res);
+        }
+    }
+
+    public function create($normalizedData)
+    {
+        $variantData = $this->transformNormalizedData($normalizedData);
+
     }
 }
