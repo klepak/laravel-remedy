@@ -35,3 +35,9 @@ add connection to database config
     'prefix' => '',
 ],
 ```
+
+**Model Scopes**
+The default scope on each model is set to select only the most relevant properties. If you want to see all available properties, call withoutGlobalScope("standard") on your model instance. For example:
+```
+WorkOrder::withoutGlobalScope('standard')->get();
+```
