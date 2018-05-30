@@ -4,6 +4,7 @@ namespace Klepak\RemedyApi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+
 #use MichaelAChrisco\ReadOnly\ReadOnlyTrait;
 
 abstract class RemedyCase extends Model
@@ -12,15 +13,19 @@ abstract class RemedyCase extends Model
 
     protected $connection = 'remedy';
 
+    protected $worklogTable = null;
+
     protected $guarded = [];
     public $timestamps = false;
     protected $primaryKey = "InstanceId";
     public $incrementing = false;
 
-    // Standardized Field Name => Type-Specific Actual Field Name
+    // Standardized Field Name => Type-Specific Variant Field Name
     protected static $dbSelectFields = [];
     protected static $dbDefaultFields = [];
     protected static $dbFieldMap = [];
+
+    protected static $statusTextMap = [];
 
     /**
      * The "booting" method of the model.
@@ -45,7 +50,7 @@ abstract class RemedyCase extends Model
         return $normalizedField;
     }
 
-    public function normalizeFieldName($field)
+    public function getNormalizedFieldName($field)
     {
         $reversedFieldMap = [];
         foreach(static::$dbFieldMap as $normalized => $variant)
@@ -62,14 +67,23 @@ abstract class RemedyCase extends Model
     public function toArray()
     {
         $parent = parent::toArray();
-        $mapped = [];
+        $mapped = [
+            "Status_Text" => $this->status_text
+        ];
 
         foreach($parent as $key => $value)
         {
-            $mapped[$this->normalizeFieldName($key)] = $value;
+            $mapped[$this->getNormalizedFieldName($key)] = $value;
         }
 
+        ksort($mapped);
+
         return $mapped;
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return isset(static::$statusTextMap[$this->Status]) ? static::$statusTextMap[$this->Status] : "Unknown";
     }
 
     public function __get($key)
@@ -79,5 +93,16 @@ abstract class RemedyCase extends Model
         \Log::debug("Get $key transformed to $normalizedField");
 
         return parent::__get($normalizedField);
+    }
+
+    public static function getClassName() {
+        $Class = explode('\\',static::class);
+        return end($Class);
+    }
+    
+    public function api()
+    {
+        $apiClassName = "\\Klepak\\RemedyApi\\API\\{$this->getClassName()}";
+        return new $apiClassName($this);
     }
 }

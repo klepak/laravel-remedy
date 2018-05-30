@@ -5,6 +5,7 @@ namespace Klepak\RemedyApi\Models;
 class WorkOrder extends RemedyCase
 {
     protected $table = "WOI_WorkOrder";
+    protected $worklogTable = "WOI_WorkInfo";
 
     protected static $dbSelectFields = [
         "InstanceId",
@@ -40,7 +41,7 @@ class WorkOrder extends RemedyCase
 		"Assigned_Group",
     ];
 
-    // Standardized Field Name => Type-Specific Actual Field Name
+    // Standardized Field Name => Type-Specific Variant Field Name
     protected static $dbFieldMap = [
         "Assigned_Group" => "ASGRP",
 		"Assignee" => "Request_Assignee",
@@ -63,17 +64,15 @@ class WorkOrder extends RemedyCase
 
     const MAX_ACTIVE_STATUS = self::STATUS_IN_PROGRESS;
 
-    private static $statusTextMap = [
-        self::STATUS_ASSIGNED => "Assigned", 
-        self::STATUS_PENDING => "Pending", 
-        self::STATUS_WAITING_APPROVAL => "Waiting Approval", 
-        self::STATUS_PLANNING => "Planning", 
-        self::STATUS_IN_PROGRESS => "In Progress", 
-        self::STATUS_COMPLETED => "Completed", 
-        self::STATUS_REJECTED => "Rejected", 
-        self::STATUS_CANCELLED => "Cancelled", 
-        self::STATUS_CLOSED => "Closed", 
+    protected static $statusTextMap = [
+        self::STATUS_ASSIGNED => "Assigned",
+        self::STATUS_PENDING => "Pending",
+        self::STATUS_WAITING_APPROVAL => "Waiting Approval",
+        self::STATUS_PLANNING => "Planning",
+        self::STATUS_IN_PROGRESS => "In Progress",
+        self::STATUS_COMPLETED => "Completed",
+        self::STATUS_REJECTED => "Rejected",
+        self::STATUS_CANCELLED => "Cancelled",
+        self::STATUS_CLOSED => "Closed",
     ];
-
-    
 }
