@@ -50,6 +50,11 @@ class WorkOrder extends RemedyCase
 		"Description" => "Summary",
 		"Last_Resolved_Date" => "Completed_Date",
 		"Entry_ID" => "Request_ID",
+		
+		
+		"Assigned_Support_Company" => "ASCPY",
+		"Support_Organization" => "ASORG",
+		
     ];
 
     const STATUS_ASSIGNED = 0;
