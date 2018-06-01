@@ -5,11 +5,13 @@ namespace Klepak\RemedyApi\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
+use Klepak\RemedyApi\Traits\ReflectsOnClassName;
+
 #use MichaelAChrisco\ReadOnly\ReadOnlyTrait;
 
 abstract class RemedyCase extends Model
 {
-    #use ReadOnlyTrait;
+    use ReflectsOnClassName;
 
     protected $connection = 'remedy';
 
@@ -95,9 +97,13 @@ abstract class RemedyCase extends Model
         return parent::__get($normalizedField);
     }
 
-    public static function getClassName() {
-        $Class = explode('\\',static::class);
-        return end($Class);
+    public function __set($key, $value)
+    {
+        $normalizedField = $this->getVariantFieldName($key);
+
+        \Log::debug("Set $key transformed to $normalizedField");
+
+        return parent::__set($normalizedField, $value);
     }
     
     public function api()
