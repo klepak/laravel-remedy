@@ -7,10 +7,15 @@ use Klepak\RemedyApi\Exceptions\RemedyApiException;
 use Klepak\RemedyApi\Models\RemedyCase as RemedyModel;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Exception\BadResponseException;
+
+use Klepak\RemedyApi\Traits\ReflectsOnClassName;
 
 abstract class RemedyCase
 {
+    use ReflectsOnClassName;
+
     private $token = null;
 
     protected static $interface = null;
@@ -63,22 +68,18 @@ abstract class RemedyCase
 
         if($method !== 'GET' && !isset($headers['Content-Type']))
             $headers['Content-Type'] = 'application/json';
-        
+
+        $args["headers"] = $headers;
+
         try
         {
-            $res = $client->request($method, static::getServer() . $url, $args, $headers);
+            $res = $client->request($method, static::getServer() . $url, $args);
 
-            if($res->getStatusCode() == 200)
-            {
-                return $res;
-            }
-            else
-            {
-                throw new RemedyApiException(null, $res);
-            }
+            return $res;
         }
         catch(BadResponseException $e)
-        {            
+        {
+            \Log::info("Bad response");
             throw new RemedyApiException($e->getRequest(), $e->getResponse());
         }
     }
@@ -87,6 +88,10 @@ abstract class RemedyCase
     {
         if(isset($map[$normalizedField]))
             return $map[$normalizedField];
+
+        $normalizedField = str_replace("_", " ", $normalizedField);
+
+        \Log::info("Normalized $normalizedField");
         
         return $normalizedField;
     }
@@ -126,7 +131,7 @@ abstract class RemedyCase
     }
 
     // Transforms normalized data into variant data
-    public function transformNormalizedData($normalizedData)
+    public function transformNormalizedData($normalizedData, $map)
     {
         $variantData = [];
         foreach($normalizedData as $key => $value)
@@ -137,15 +142,49 @@ abstract class RemedyCase
         return $variantData;
     }
 
+    public function normalizeVariantData($variantData, $map)
+    {
+        $normalizedData = [];
+        
+        foreach($variantData as $key => $value)
+        {
+            $normalizedData[$this->getNormalizedFieldName($key, $map)] = $value;
+        }
+
+        return $normalizedData;
+    }
+
+    public function transformNormalizedCreateInterfaceData($normalizedData)
+    {
+        return $this->transformNormalizedData($normalizedData, static::$createInterfaceFieldMap);
+    }
+
+    public function transformNormalizedStandardInterfaceData($normalizedData)
+    {
+        return $this->transformNormalizedData($normalizedData, static::$standardInterfaceFieldMap);
+    }
+
+    public function normalizeVariantCreateInterfaceData($variantData)
+    {
+        return $this->normalizeVariantData($variantData, static::$createInterfaceFieldMap);
+    }
+
+    public function normalizeVariantStandardInterfaceData($variantData)
+    {
+        return $this->normalizeVariantData($variantData, static::$standardInterfaceFieldMap);
+    }
+
     public function update($normalizedData)
     {
-        $variantData = $this->transformNormalizedData($normalizedData);
+        $variantData = $this->transformNormalizedStandardInterfaceData($normalizedData);
 
-        $args = json_encode([
-            'values' => $variantData
-        ]);
+        $args = [
+            RequestOptions::JSON => [
+                'values' => $variantData
+            ]
+        ];
 
-        $res = $this->request('PUT', "/api/arsys/v1/entry/{$this->interface}Interface/{$this->model->Entry_ID}|{$this->model->Entry_ID}", $args);
+        $res = $this->request('PUT', "/api/arsys/v1/entry/".static::$interface."Interface/{$this->model->Entry_ID}|{$this->model->Entry_ID}", $args);
 
         if($res->getStatusCode() == 204)
         {
@@ -159,7 +198,61 @@ abstract class RemedyCase
 
     public function create($normalizedData)
     {
-        $variantData = $this->transformNormalizedData($normalizedData);
+        $variantData = $this->transformNormalizedCreateInterfaceData($normalizedData);
 
+        $args = [
+            RequestOptions::JSON => [
+                'values' => $variantData
+            ]
+        ];
+
+        $interface = static::$interface."Interface";
+        
+        // TODO: only append if not task
+        $interface .= "_Create";
+
+        // perform initial request to create case
+        $initialCreateRequest = $this->request('POST', "/api/arsys/v1/entry/$interface", $args);
+        if($initialCreateRequest->getStatusCode() == 201)
+        {
+            // extract request id from response to get case data
+
+            $headers = $initialCreateRequest->getHeaders();
+
+            if(!isset($headers["Location"]) && !isset($headers["Location"][0]))
+                throw new RemedyApiException(null, $initialCreateRequest, "Missing Location header in response");
+
+            $locationSegments = explode("/", $headers["Location"][0]);
+            $requestId = end($locationSegments);
+
+            // perform request to retrieve data about created case
+            $retrieveCaseDataRequest = $this->request('GET', "/api/arsys/v1/entry/$interface/$requestId?fields=values(InstanceId)");
+
+            if($retrieveCaseDataRequest->getStatusCode() == 200)
+            {
+                $body = $retrieveCaseDataRequest->getBody();
+                if(\isJson($body))
+                {
+                    $caseData = json_decode($body);
+
+                    if(!isset($caseData->values) && !isset($caseData->values->InstanceId))
+                        throw new RemedyApiException(null, $retrieveCaseDataRequest, "Missing InstanceId in case data");
+
+                    return $caseData->values->InstanceId;
+                }
+                else
+                {
+                    throw new RemedyApiException(null, $retrieveCaseDataRequest, "Response body is not valid JSON");
+                }
+            }
+            else
+            {
+                throw new RemedyApiException(null, $retrieveCaseDataRequest, "Unexpected HTTP response code");
+            }
+        }
+        else
+        {
+            throw new RemedyApiException(null, $res);
+        }
     }
 }

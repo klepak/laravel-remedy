@@ -4,7 +4,7 @@ namespace Klepak\RemedyApi\API;
 
 class WorkOrder extends RemedyCase
 {
-	protected static $interface = 'HPD:Incident';
+	protected static $interface = 'WOI:WorkOrder';
 
     protected static $createInterfaceFieldMap = [
         "Case_Number" => "WorkOrder_ID",
@@ -12,15 +12,9 @@ class WorkOrder extends RemedyCase
     ];
 
     protected static $standardInterfaceFieldMap = [
-        "Description" => "Summary",
-		"Assignee" => "Request Assignee",
+		"Customer_Company" => "Assigned Support Company",
+		"Support_Organization" => "Assigned Support Organization",
 
-		"Assigned Support Company" => "Support Company",
-		"Assigned Support Organization" => "Support Organization",
-		"Assigned Support Group Name" => "Support Group",
-
-		"Assigned Group" => "Support Group Name",
-
-		"Assigned Group ID" => "Support Group ID",
+		"Support_Group_ID" => "Assigned Group ID",
     ];
 }

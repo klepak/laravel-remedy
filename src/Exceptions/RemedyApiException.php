@@ -10,7 +10,7 @@ class RemedyApiException extends \Exception
     private $request = null;
     private $response = null;
 
-    public function __construct($request, $response)
+    public function __construct($request, $response, $message = null)
     {
         $this->request = $request;
         $this->response = $response;
@@ -24,27 +24,52 @@ class RemedyApiException extends \Exception
             {
                 $text = isset($message->messageText) ? $message->messageText : "No message";
                 $type = isset($message->messageType) ? $message->messageType : "UNKNOWN";
+
+                if(isset($message->messageAppendedText) && $message->messageAppendedText !== null)
+                    $text .= " ($message->messageAppendedText)";
+
                 $messages[] = "[$type] $text";
             }
 
             $messageText = implode(" / ", $messages);
+
+            if($message !== null)
+                $messageText = $message.": ".$messageText;
 
             parent::__construct($messageText);
             Log::error($messageText);
         }
         else
         {
-            parent::__construct("Non-json message response");
+            if($message !== null)
+                $messageText = $message;
+            else
+                $messageText = "Non-json message response";
+                
+            parent::__construct($messageText);
         }
     }
 
     public function log()
     {
-        Log::debug("Remedy API request failed.\n".Psr7\str($this->request));
+        $requestString = "";
+
+        if($this->request !== null)
+            $requestString .= "\nRequest:\n".Psr7\str($this->request);
+        
+        if($this->response !== null)
+            $requestString .= "\nResponse:\n".Psr7\str($this->response);
+        
+        Log::debug("Remedy API request failed.$requestString");
     }
 
     public function getRequest()
     {
         return $this->request;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
     }
 }
