@@ -71,9 +71,16 @@ abstract class RemedyCase
 
         $args["headers"] = $headers;
 
+        $fullUrl = static::getServer() . $url;
+
+        \Log::debug("$method: $fullUrl");
+        \Log::debug("\n".print_r($args,true));
+        if(isset($args["json"]))
+            \Log::debug("\n".json_encode($args["json"]));
+
         try
         {
-            $res = $client->request($method, static::getServer() . $url, $args);
+            $res = $client->request($method, $fullUrl, $args);
 
             return $res;
         }
@@ -184,7 +191,7 @@ abstract class RemedyCase
             ]
         ];
 
-        $res = $this->request('PUT', "/api/arsys/v1/entry/".static::$interface."Interface/{$this->model->Entry_ID}|{$this->model->Entry_ID}", $args);
+        $res = $this->request('PUT', "/api/arsys/v1/entry/{$this->getStandardInterface()}/{$this->model->Entry_ID}|{$this->model->Entry_ID}", $args);
 
         if($res->getStatusCode() == 204)
         {
@@ -194,6 +201,16 @@ abstract class RemedyCase
         {
             throw new RemedyApiException(null, $res);
         }
+    }
+
+    public function getStandardInterface()
+    {
+        return static::$interface."Interface";
+    }
+
+    public function getCreateInterface()
+    {
+        return static::$interface."Interface_Create";
     }
 
     public function create($normalizedData)
@@ -206,10 +223,7 @@ abstract class RemedyCase
             ]
         ];
 
-        $interface = static::$interface."Interface";
-        
-        // TODO: only append if not task
-        $interface .= "_Create";
+        $interface = $this->getCreateInterface();
 
         // perform initial request to create case
         $initialCreateRequest = $this->request('POST', "/api/arsys/v1/entry/$interface", $args);
@@ -247,12 +261,17 @@ abstract class RemedyCase
             }
             else
             {
-                throw new RemedyApiException(null, $retrieveCaseDataRequest, "Unexpected HTTP response code");
+                throw new RemedyApiException(null, $retrieveCaseDataRequest, "Unexpected HTTP response code from subsequent request");
             }
+        }
+        elseif($initialCreateRequest->getStatusCode() == 204)
+        {
+            echo "No content received";
+            throw new RemedyApiException(null, $initialCreateRequest, "Unexpected HTTP response code");
         }
         else
         {
-            throw new RemedyApiException(null, $res);
+            throw new RemedyApiException(null, $initialCreateRequest, "Unexpected HTTP response code");
         }
     }
 }

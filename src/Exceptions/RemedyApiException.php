@@ -10,7 +10,7 @@ class RemedyApiException extends \Exception
     private $request = null;
     private $response = null;
 
-    public function __construct($request, $response, $message = null)
+    public function __construct($request, $response, $customMessage = null)
     {
         $this->request = $request;
         $this->response = $response;
@@ -33,18 +33,20 @@ class RemedyApiException extends \Exception
 
             $messageText = implode(" / ", $messages);
 
-            if($message !== null)
-                $messageText = $message.": ".$messageText;
+            if($customMessage !== null)
+                $messageText = $customMessage.": ".$messageText;
 
             parent::__construct($messageText);
             Log::error($messageText);
         }
         else
         {
-            if($message !== null)
-                $messageText = $message;
+            if($customMessage !== null)
+                $messageText = $customMessage;
             else
                 $messageText = "Non-json message response";
+            
+            $this->log();
                 
             parent::__construct($messageText);
         }
