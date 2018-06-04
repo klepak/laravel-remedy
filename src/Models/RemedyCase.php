@@ -29,6 +29,16 @@ abstract class RemedyCase extends Model
 
     protected static $statusTextMap = [];
 
+    public function getDefaultFields()
+    {
+        return static::$dbDefaultFields;
+    }
+
+    public function getSelectFields()
+    {
+        return static::$dbSelectFields;
+    }
+
     /**
      * The "booting" method of the model.
      *

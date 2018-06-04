@@ -30,7 +30,7 @@ class Task extends RemedyCase
         "Customer_Last_Name",
         
         "Hours",
-        "Min_x",
+        #"Min_x",
         
         "RootRequestInstanceID",
         "RootRequestName",

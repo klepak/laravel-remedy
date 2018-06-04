@@ -25,7 +25,7 @@ class Change extends RemedyCase
 		"Customer_Internet_E_mail",
         "Change_Request_Status",
         "Submit_Date",
-        "Entry_ID"
+        #"Entry_ID"
     ];
 
     protected static $dbDefaultFields = [

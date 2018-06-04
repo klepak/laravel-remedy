@@ -32,10 +32,15 @@ abstract class RemedyCase
     {
         $this->model = $model;
 
+        $this->login(env('REMEDYAPI_USERNAME'), env('REMEDYAPI_PASSWORD'));
+    }
+
+    public function login($username, $password)
+    {
         $res = $this->request('POST', '/api/jwt/login', [
             'form_params' => [
-                'username' => env('REMEDYAPI_USERNAME'),
-                'password' => env('REMEDYAPI_PASSWORD'),
+                'username' => $username,
+                'password' => $password,
             ]
         ], [
             'Content-Type' => 'application/x-www-form-urlencoded'
