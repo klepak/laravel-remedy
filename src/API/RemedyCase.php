@@ -148,7 +148,7 @@ abstract class RemedyCase
         $variantData = [];
         foreach($normalizedData as $key => $value)
         {
-            $variantData[$this->getStandardInterfaceVariantFieldName($key)] = $value;
+            $variantData[$this->getVariantFieldName($key, $map)] = $value;
         }
 
         return $variantData;
