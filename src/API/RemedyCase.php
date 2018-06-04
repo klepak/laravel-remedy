@@ -266,6 +266,7 @@ abstract class RemedyCase
         }
         elseif($initialCreateRequest->getStatusCode() == 204)
         {
+            // success (no content)
             echo "No content received";
             throw new RemedyApiException(null, $initialCreateRequest, "Unexpected HTTP response code");
         }
