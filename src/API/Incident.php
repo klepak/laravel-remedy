@@ -2,8 +2,12 @@
 
 namespace Klepak\RemedyApi\API;
 
+use Klepak\RemedyApi\Traits\HasTasks;
+
 class Incident extends RemedyCase
 {
+    use HasTasks;
+    
 	protected static $interface = 'HPD:Incident';
 
     protected static $createInterfaceFieldMap = [
