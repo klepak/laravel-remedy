@@ -41,3 +41,20 @@ The default scope on each model is set to select only the most relevant properti
 ```
 WorkOrder::withoutGlobalScope('standard')->get();
 ```
+
+**Creating cases**
+Case data provided to create() method will be supplemented with default values from API model. See API doc for an overview.
+
+*Incident*
+
+```
+(new Incident)->api()->create([
+    "Login_ID" => "(Customer Login ID)",
+
+    "Support_Company" => "(Support Company to assign case to)",
+    "Support_Organization" => "(Support Organization to assign case to)",
+    "Assigned_Group" => "(Support Group to assign case to)",
+    
+    "Description" => "(Case Title)"
+]);
+```
