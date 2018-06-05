@@ -5,11 +5,24 @@ namespace Klepak\RemedyApi\Exceptions;
 use GuzzleHttp\Psr7;
 use Log;
 
+/**
+ * Exception thrown by Remedy API errors
+ */
 class RemedyApiException extends \Exception
 {
+    /**
+     * The associated request object, if any
+     */
     private $request = null;
+
+    /**
+     * The associated response object, if any
+     */
     private $response = null;
 
+    /**
+     * Parse request and response, return proper exception and log
+     */
     public function __construct($request, $response, $customMessage = null)
     {
         $this->request = $request;
@@ -52,6 +65,9 @@ class RemedyApiException extends \Exception
         }
     }
 
+    /**
+     * Dumps info about the error to log
+     */
     public function log()
     {
         $requestString = "";
@@ -65,11 +81,17 @@ class RemedyApiException extends \Exception
         Log::debug("Remedy API request failed.$requestString");
     }
 
+    /**
+     * Retrieve the associated request object
+     */
     public function getRequest()
     {
         return $this->request;
     }
 
+    /**
+     * Retrieve the associated response object
+     */
     public function getResponse()
     {
         return $this->response;

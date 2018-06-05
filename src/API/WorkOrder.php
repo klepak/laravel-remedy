@@ -4,12 +4,23 @@ namespace Klepak\RemedyApi\API;
 
 use Klepak\RemedyApi\Traits\HasTasks;
 
+/**
+ * Remedy API: WorkOrder
+ */
 class WorkOrder extends RemedyCase
 {
     use HasTasks;
     
+    /**
+     * Base name of API interface for this case type
+     */
 	protected static $interface = 'WOI:WorkOrder';
 
+    /**
+     * Maps field names on the API create interface to normalized field names
+     * 
+     * Follows the format Normalized Field Name => Type-Specific Variant Field Name
+     */
     protected static $createInterfaceFieldMap = [
         "Case_Number" => "WorkOrder_ID",
         "Entry_ID" => "Request ID",
@@ -18,6 +29,11 @@ class WorkOrder extends RemedyCase
         "Description" => "Summary"
     ];
 
+    /**
+     * Maps field names on the API standard interface to normalized field names
+     * 
+     * Follows the format Normalized Field Name => Type-Specific Variant Field Name
+     */
     protected static $standardInterfaceFieldMap = [
 		"Support_Organization" => "Assigned Support Organization",
 
