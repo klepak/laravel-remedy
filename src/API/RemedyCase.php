@@ -20,9 +20,12 @@ abstract class RemedyCase
 
     protected static $interface = null;
 
-    // Standardized Field Name => Type-Specific Variant Field Name
+    // Normalized Field Name => Type-Specific Variant Field Name
     protected static $createInterfaceFieldMap = [];
     protected static $createInterfaceDefaultFields = [];
+    
+    // Normalized field name => Value
+    protected static $createInterfaceDefaultValues = [];
 
     protected static $standardInterfaceFieldMap = [];
 
@@ -221,6 +224,12 @@ abstract class RemedyCase
     public function create($normalizedData)
     {
         $variantData = $this->transformNormalizedCreateInterfaceData($normalizedData);
+
+        foreach($this->transformNormalizedCreateInterfaceData(static::$createInterfaceDefaultValues) as $key => $value)
+        {
+            if(!isset($variantData[$key]))
+                $variantData[$key] = $value;
+        }
 
         $args = [
             RequestOptions::JSON => [

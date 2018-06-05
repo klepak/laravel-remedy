@@ -14,13 +14,11 @@ class WorkOrder extends RemedyCase
         "Case_Number" => "WorkOrder_ID",
         "Entry_ID" => "Request ID",
         
-        "Assigned_Support_Company" => "Support Company",
         "Assignee" => "Request Assignee",
         "Description" => "Summary"
     ];
 
     protected static $standardInterfaceFieldMap = [
-		#"Customer_Company" => "Assigned Support Company", ??
 		"Support_Organization" => "Assigned Support Organization",
 
 		"Support_Group_ID" => "Assigned Group ID",

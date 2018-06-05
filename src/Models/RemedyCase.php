@@ -22,16 +22,20 @@ abstract class RemedyCase extends Model
     protected $primaryKey = "InstanceId";
     public $incrementing = false;
 
-    // Standardized Field Name => Type-Specific Variant Field Name
+    // Variant Field Names
     protected static $dbSelectFields = [];
-    protected static $dbDefaultFields = [];
+    
+    // Normalized
+    protected static $defaultViewFields = [];
+    
+    // Normalized Field Name => Type-Specific Variant Field Name
     protected static $dbFieldMap = [];
 
     protected static $statusTextMap = [];
 
     public function getDefaultFields()
     {
-        return static::$dbDefaultFields;
+        return static::$defaultViewFields;
     }
 
     public function getSelectFields()

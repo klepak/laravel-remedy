@@ -30,6 +30,7 @@ class WorkOrder extends RemedyCase
 		"Submit_Date",
     ];
 
+	// Normalized - TODO: normalize
     protected static $dbDefaultFields = [
         "Status",
 		"Customer_Company",
@@ -41,7 +42,7 @@ class WorkOrder extends RemedyCase
 		"Assigned_Group",
     ];
 
-    // Standardized Field Name => Type-Specific Variant Field Name
+    // Normalized Field Name => Type-Specific Variant Field Name
     protected static $dbFieldMap = [
         "Assigned_Group" => "ASGRP",
 		"Assignee" => "Request_Assignee",
@@ -53,8 +54,7 @@ class WorkOrder extends RemedyCase
 		
 		
 		"Assigned_Support_Company" => "ASCPY",
-		"Support_Organization" => "ASORG",
-		
+		"Support_Organization" => "ASORG",	
     ];
 
     const STATUS_ASSIGNED = 0;
