@@ -14,7 +14,7 @@ class Change extends RemedyCase
     /**
      * Base name of API interface for this case type
      */
-	protected static $interface = 'CHG:Change';
+	protected static $interface = 'CHG:ChangeInterface';
 
     /**
      * Maps field names on the API create interface to normalized field names

@@ -14,7 +14,7 @@ class Incident extends RemedyCase
     /**
      * Base name of API interface for this case type
      */
-	protected static $interface = 'HPD:Incident';
+	protected static $interface = 'HPD:IncidentInterface';
 
     /**
      * Maps field names on the API create interface to normalized field names

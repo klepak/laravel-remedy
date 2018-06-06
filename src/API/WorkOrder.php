@@ -14,7 +14,7 @@ class WorkOrder extends RemedyCase
     /**
      * Base name of API interface for this case type
      */
-	protected static $interface = 'WOI:WorkOrder';
+	protected static $interface = 'WOI:WorkOrderInterface';
 
     /**
      * Maps field names on the API create interface to normalized field names

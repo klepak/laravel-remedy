@@ -55,7 +55,7 @@ abstract class RemedyCase
     /**
      * Related model passed to constructor
      */
-    private $model = null;
+    public $model = null;
 
     /**
      * Instantiates object, performs authentication with API
@@ -364,7 +364,7 @@ abstract class RemedyCase
      */
     public function getStandardInterface()
     {
-        return static::$interface."Interface";
+        return static::$interface;
     }
 
     /**
@@ -374,7 +374,7 @@ abstract class RemedyCase
      */
     public function getCreateInterface()
     {
-        return static::$interface."Interface_Create";
+        return static::$interface."_Create";
     }
 
     /**

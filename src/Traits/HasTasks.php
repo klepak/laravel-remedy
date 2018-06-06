@@ -2,6 +2,8 @@
 
 namespace Klepak\RemedyApi\Traits;
 
+use Klepak\RemedyApi\Models\Task;
+
 /**
  * Provides simplified functionality for handling related Tasks
  */
@@ -14,10 +16,21 @@ trait HasTasks
      */
     public function createTask($normalizedData)
     {
-        // check if model is proper instance
+        if($this->model === null)
+            throw new \Exception("Model not initialized");
 
-        $normalizedData["RootRequestInstanceID"] = $this->model->InstanceId;
-        $normalizedData["RootRequestName"] = $this->model->Case_Number;
+        $instanceId = $this->model->InstanceId;
+        $caseNumber = $this->model->Case_Number;
+
+        if(empty($instanceId))
+            throw new \Exception("Model instance missing InstanceId");
+        
+        if(empty($caseNumber))
+            throw new \Exception("Model instance missing Case_Number");
+
+        $normalizedData["RootRequestInstanceID"] = $instanceId;
+        $normalizedData["RootRequestName"] = $caseNumber;
+        $normalizedData["RootRequestMode"] = "0";
 
         return (new Task)->api()->create($normalizedData);
     }
