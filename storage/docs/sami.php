@@ -7,7 +7,7 @@ $iterator = Finder::create()
     ->files()
     ->name('*.php')
     ->exclude('tests')
-    ->in('./src');
+    ->in(__DIR__.'/../../src');
 
 return new Sami($iterator, array(
     'title'                => 'laravel-remedy',
