@@ -10,7 +10,7 @@ use Klepak\RemedyApi\Traits\HasTasks;
 class WorkOrder extends RemedyCase
 {
     use HasTasks;
-    
+
     /**
      * Base name of API interface for this case type
      */
@@ -18,20 +18,20 @@ class WorkOrder extends RemedyCase
 
     /**
      * Maps field names on the API create interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $createInterfaceFieldMap = [
         "Case_Number" => "WorkOrder_ID",
         "Entry_ID" => "Request ID",
-        
+
         "Assignee" => "Request Assignee",
         "Description" => "Summary"
     ];
 
     /**
      * Maps field names on the API standard interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $standardInterfaceFieldMap = [
@@ -39,4 +39,11 @@ class WorkOrder extends RemedyCase
 
 		"Support_Group_ID" => "Assigned Group ID",
     ];
+
+    /**
+     * Root request form name for Task owner
+     *
+     * Identifies the case type of the Task owner
+     */
+    protected static $rootRequestFormName = 'WOI:WorkOrder';
 }

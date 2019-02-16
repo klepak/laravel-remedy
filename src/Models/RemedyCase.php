@@ -27,7 +27,7 @@ abstract class RemedyCase extends Model
      * Controls whether model should use automatic timestamp (Disabled for Remedy models)
      */
     public $timestamps = false;
-    
+
     /**
      * Set primary key of model (InstanceId for Remedy models)
      */
@@ -42,17 +42,17 @@ abstract class RemedyCase extends Model
      * Variant field names to select in default model scope
      */
     protected static $dbSelectFields = [];
-    
+
     /**
      * Maps type-specific field names in the database to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $dbFieldMap = [];
 
     /**
      * Maps status int value from database to correct string representation
-     * 
+     *
      * Follows the format status_int => status_text
      */
     protected static $statusTextMap = [];
@@ -60,7 +60,7 @@ abstract class RemedyCase extends Model
 
     /**
      * Get select fields for standard model scope
-     * 
+     *
      * @return array
      */
     public function getSelectFields()
@@ -78,31 +78,31 @@ abstract class RemedyCase extends Model
         parent::boot();
 
         $dbSelectFields = static::$dbSelectFields;
-        static::addGlobalScope('standard', function(Builder $builder) use ($dbSelectFields) {
+        /*static::addGlobalScope('standard', function(Builder $builder) use ($dbSelectFields) {
             $builder->select($dbSelectFields);
-        });
+        });*/
     }
 
     /**
      * Gets the variant field name from the normalized field name
-     * 
+     *
      * @param string $normalizedField The normalized field name to transform
-     * 
+     *
      * @return string
      */
     public function getVariantFieldName($normalizedField)
     {
         if(isset(static::$dbFieldMap[$normalizedField]))
             return static::$dbFieldMap[$normalizedField];
-        
+
         return $normalizedField;
     }
 
     /**
      * Gets the normalized field name from the variant field name
-     * 
+     *
      * @param string $field The variant field name to normalize
-     * 
+     *
      * @return string
      */
     public function getNormalizedFieldName($field)
@@ -121,9 +121,9 @@ abstract class RemedyCase extends Model
 
     /**
      * Dumps standard properties of model to array.
-     * 
+     *
      * Normalizes field names, sorts by key.
-     * 
+     *
      * @return array
      */
     public function toArray()
@@ -145,7 +145,7 @@ abstract class RemedyCase extends Model
 
     /**
      * Accessor for status_text, gets status string based on int value, or "Unknown"
-     * 
+     *
      * @return string
      */
     public function getStatusTextAttribute()
@@ -155,7 +155,7 @@ abstract class RemedyCase extends Model
 
     /**
      * Magic __get method to transform normalized field names to variant field names when trying to access properties.
-     * 
+     *
      * @return string
      */
     public function __get($key)
@@ -169,7 +169,7 @@ abstract class RemedyCase extends Model
 
     /**
      * Magic __set method to transform normalized field names to variant field names when trying to set properties.
-     * 
+     *
      * @return string
      */
     public function __set($key, $value)
@@ -180,15 +180,23 @@ abstract class RemedyCase extends Model
 
         return parent::__set($variantField, $value);
     }
-    
+
     /**
      * Instantiates API object of correct type for current model.
-     * 
+     *
      * @return \Klepak\RemedyApi\Api\RemedyCase
      */
     public function api()
     {
         $apiClassName = "\\Klepak\\RemedyApi\\API\\{$this->getClassName()}";
         return new $apiClassName($this);
+    }
+
+    /**
+     * Return the task owner create interface field map for this model
+     */
+    public function getTaskOwnerCreateInterfaceFieldMap()
+    {
+        return static::$taskOwnerCreateInterfaceFieldMap;
     }
 }

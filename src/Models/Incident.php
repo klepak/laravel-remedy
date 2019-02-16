@@ -42,7 +42,7 @@ class Incident extends RemedyCase
 
     /**
      * Maps type-specific field names in the database to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $dbFieldMap = [
@@ -50,6 +50,30 @@ class Incident extends RemedyCase
 		"Customer_Company" => "Company",
 		"Case_Number" => "Incident_Number",
     ];
+
+    /**
+     * Maps task owner create interface fields to model properties
+     *
+     * Follows the format Task interface field => Case field
+     */
+	public static $taskOwnerCreateInterfaceFieldMap = [
+		"Location Company" => "Contact_Company",
+		"Submitter" => "Submitter",
+		"Customer Company" => "Company",
+		"Customer First Name" => "First_Name",
+		"Support Organization" => "Assigned_Support_Organization",
+		"Customer Last Name" => "Last_Name",
+
+		"Support Company" => "Assigned_Support_Company",
+
+		"Assignee Organization" => "Assigned_Support_Organization",
+		"Assignee Group" => "Assigned_Group",
+		"Assignee Group ID" => "Assigned_Group_ID",
+
+		"RootRequestInstanceID" => "InstanceId",
+		"RootRequestName" => "Incident_Number",
+		"RootRequestID" => "Incident_Number"
+        ];
 
     const STATUS_NEW = 0;
 	const STATUS_ASSIGNED = 1;
@@ -63,16 +87,16 @@ class Incident extends RemedyCase
 
 	/**
      * Maps status int value from database to correct string representation
-     * 
+     *
      * Follows the format status_int => status_text
      */
     protected static $statusTextMap = [
-        self::STATUS_NEW => "New", 
-		self::STATUS_ASSIGNED => "Assigned", 
-		self::STATUS_IN_PROGRESS => "In Progress", 
-		self::STATUS_PENDING => "Pending", 
-		self::STATUS_RESOLVED => "Resolved", 
-		self::STATUS_CLOSED => "Closed", 
+        self::STATUS_NEW => "New",
+		self::STATUS_ASSIGNED => "Assigned",
+		self::STATUS_IN_PROGRESS => "In Progress",
+		self::STATUS_PENDING => "Pending",
+		self::STATUS_RESOLVED => "Resolved",
+		self::STATUS_CLOSED => "Closed",
 		self::STATUS_CANCELLED => "Cancelled"
     ];
 }

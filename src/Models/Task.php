@@ -13,18 +13,13 @@ class Task extends RemedyCase
     protected $table = "TMS_Task";
 
     /**
-     * Associated worklog DB table
-     */
-    protected $worklogTable = "TMS_WorkInfo";
-
-    /**
      * Variant field names to select in default model scope
      */
     protected static $dbSelectFields = [
         "Task_ID",
         "Submitter",
         "Create_Date",
-        
+
         "Assigned_To",
         "Assignee_Group",
         "Assignee",
@@ -35,16 +30,16 @@ class Task extends RemedyCase
 
         "Summary",
         "TaskName",
-        
+
         "InstanceId",
         "Invoice_Text",
         "Customer_Company",
         "Customer_First_Name",
         "Customer_Last_Name",
-        
+
         "Hours",
         #"Min_x",
-        
+
         "RootRequestInstanceID",
         "RootRequestName",
         "RootRequestFormName",
@@ -53,7 +48,7 @@ class Task extends RemedyCase
 
     /**
      * Maps type-specific field names in the database to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $dbFieldMap = [
@@ -79,16 +74,16 @@ class Task extends RemedyCase
 
     /**
      * Maps status int value from database to correct string representation
-     * 
+     *
      * Follows the format status_int => status_text
      */
     protected static $statusTextMap = [
-        self::STATUS_STAGED => "Staged", 
-        self::STATUS_ASSIGNED => "Assigned", 
-        self::STATUS_PENDING => "Pending", 
-        self::STATUS_WIP => "Work In Progress", 
-        self::STATUS_WAITING => "Waiting", 
-        self::STATUS_CLOSED => "Closed", 
+        self::STATUS_STAGED => "Staged",
+        self::STATUS_ASSIGNED => "Assigned",
+        self::STATUS_PENDING => "Pending",
+        self::STATUS_WIP => "Work In Progress",
+        self::STATUS_WAITING => "Waiting",
+        self::STATUS_CLOSED => "Closed",
         self::STATUS_BYPASSED => "Bypassed"
     ];
 }

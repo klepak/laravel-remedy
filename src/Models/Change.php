@@ -11,7 +11,7 @@ class Change extends RemedyCase
      * Database table for model
      */
     protected $table = "CHG_Infrastructure_Change";
-    
+
     /**
      * Associated worklog DB table
      */
@@ -43,7 +43,7 @@ class Change extends RemedyCase
 
     /**
      * Maps type-specific field names in the database to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $dbFieldMap = [
@@ -54,6 +54,30 @@ class Change extends RemedyCase
         "Case_Number" => "Infrastructure_Change_ID",
         "Last_Resolved_Date" => "Completed_Date",
     ];
+
+    /**
+     * Maps task owner create interface fields to model properties
+     *
+     * Follows the format Task interface field => Case field
+     */
+	public static $taskOwnerCreateInterfaceFieldMap = [
+		"Location Company" => "Location_Company",
+		"Submitter" => "Submitter",
+		"Customer Company" => "Customer_Company",
+		"Customer First Name" => "Customer_First_Name",
+		"Support Organization" => "ASORG",
+		"Customer Last Name" => "Customer_Last_Name",
+
+		"Support Company" => "ASCPY",
+
+		"Assignee Organization" => "ASORG",
+		"Assignee Group" => "ASGRP",
+		"Assignee Group ID" => "ASGRPID",
+
+		"RootRequestInstanceID" => "InstanceId",
+		"RootRequestName" => "Infrastructure_Change_ID",
+		"RootRequestID" => "Infrastructure_Change_ID"
+	];
 
     const STATUS_DRAFT = 0;
     const STATUS_REQ_AUTH = 1;
@@ -73,22 +97,22 @@ class Change extends RemedyCase
 
     /**
      * Maps status int value from database to correct string representation
-     * 
+     *
      * Follows the format status_int => status_text
      */
     protected static $statusTextMap = [
-        self::STATUS_DRAFT => "Draft", 
-		self::STATUS_REQ_AUTH => "Request For Authorization", 
-		self::STATUS_REQ_CHG => "Request For Change", 
-		self::STATUS_PLAN_PROG => "Planning In Progress", 
-		self::STATUS_SCH_REV => "Scheduled For Review", 
-		self::STATUS_SCH_APP => "Scheduled For Approval", 
-		self::STATUS_SCH => "Scheduled", 
-		self::STATUS_IMP_IP => "Implementation In Progress", 
-		self::STATUS_PENDING => "Pending", 
-		self::STATUS_REJECTED => "Rejected", 
-		self::STATUS_COMPLETED => "Completed", 
-		self::STATUS_CLOSED => "Closed", 
-		self::STATUS_CANCELLED => "Cancelled", 
+        self::STATUS_DRAFT => "Draft",
+		self::STATUS_REQ_AUTH => "Request For Authorization",
+		self::STATUS_REQ_CHG => "Request For Change",
+		self::STATUS_PLAN_PROG => "Planning In Progress",
+		self::STATUS_SCH_REV => "Scheduled For Review",
+		self::STATUS_SCH_APP => "Scheduled For Approval",
+		self::STATUS_SCH => "Scheduled",
+		self::STATUS_IMP_IP => "Implementation In Progress",
+		self::STATUS_PENDING => "Pending",
+		self::STATUS_REJECTED => "Rejected",
+		self::STATUS_COMPLETED => "Completed",
+		self::STATUS_CLOSED => "Closed",
+		self::STATUS_CANCELLED => "Cancelled",
     ];
 }

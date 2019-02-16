@@ -10,7 +10,7 @@ use Klepak\RemedyApi\Traits\HasTasks;
 class Incident extends RemedyCase
 {
     use HasTasks;
-    
+
     /**
      * Base name of API interface for this case type
      */
@@ -18,7 +18,7 @@ class Incident extends RemedyCase
 
     /**
      * Maps field names on the API create interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $createInterfaceFieldMap = [
@@ -26,14 +26,14 @@ class Incident extends RemedyCase
         "Entry_ID" => "Incident_Entry_ID",
         "Login_ID" => "Login_ID",
         "Service_Type" => "Service_Type",
-        
+
         "Support_Organization" => "Assigned Support Organization",
         "Support_Company" => "Assigned Support Company",
     ];
 
     /**
      * Contains default values of some fields on the create interface
-     * 
+     *
      * Follows the format Normalized Field Name => Value
      */
     protected static $createInterfaceDefaultValues = [
@@ -46,10 +46,17 @@ class Incident extends RemedyCase
 
     /**
      * Maps field names on the API standard interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $standardInterfaceFieldMap = [
-		
+
     ];
+
+    /**
+     * Root request form name for Task owner
+     *
+     * Identifies the case type of the Task owner
+     */
+    protected static $rootRequestFormName = 'HPD:Help Desk';
 }

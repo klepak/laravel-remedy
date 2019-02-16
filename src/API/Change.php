@@ -10,7 +10,7 @@ use Klepak\RemedyApi\Traits\HasTasks;
 class Change extends RemedyCase
 {
     use HasTasks;
-    
+
     /**
      * Base name of API interface for this case type
      */
@@ -18,19 +18,26 @@ class Change extends RemedyCase
 
     /**
      * Maps field names on the API create interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $createInterfaceFieldMap = [
-        
+
     ];
 
     /**
      * Maps field names on the API standard interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $standardInterfaceFieldMap = [
-		
+
     ];
+
+    /**
+     * Root request form name for Task owner
+     *
+     * Identifies the case type of the Task owner
+     */
+    protected static $rootRequestFormName = 'CHG:Infrastructure Change';
 }

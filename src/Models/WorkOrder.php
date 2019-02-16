@@ -11,7 +11,7 @@ class WorkOrder extends RemedyCase
      * Database table for model
      */
 	protected $table = "WOI_WorkOrder";
-	
+
 	/**
      * Associated worklog DB table
      */
@@ -45,7 +45,7 @@ class WorkOrder extends RemedyCase
 
     /**
      * Maps type-specific field names in the database to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $dbFieldMap = [
@@ -56,11 +56,37 @@ class WorkOrder extends RemedyCase
 		"Description" => "Summary",
 		"Last_Resolved_Date" => "Completed_Date",
 		"Entry_ID" => "Request_ID",
-		
-		
+
+
 		"Assigned_Support_Company" => "ASCPY",
-		"Support_Organization" => "ASORG",	
+		"Support_Organization" => "ASORG",
     ];
+
+    //
+
+    /**
+     * Maps task owner create interface fields to model properties
+     *
+     * Follows the format Task interface field => Case field
+     */
+	public static $taskOwnerCreateInterfaceFieldMap = [
+		"Location Company" => "Location_Company",
+		"Submitter" => "Submitter",
+		"Customer Company" => "Customer_Company",
+		"Customer First Name" => "Customer_First_Name",
+		"Support Organization" => "ASORG",
+		"Customer Last Name" => "Customer_Last_Name",
+
+		"Support Company" => "ASCPY",
+
+		"Assignee Organization" => "ASORG",
+		"Assignee Group" => "ASGRP",
+		"Assignee Group ID" => "ASGRPID",
+
+		"RootRequestInstanceID" => "InstanceId",
+		"RootRequestName" => "Work_Order_ID",
+		"RootRequestID" => "Work_Order_ID"
+	];
 
     const STATUS_ASSIGNED = 0;
 	const STATUS_PENDING = 1;
@@ -76,7 +102,7 @@ class WorkOrder extends RemedyCase
 
 	/**
      * Maps status int value from database to correct string representation
-     * 
+     *
      * Follows the format status_int => status_text
      */
     protected static $statusTextMap = [

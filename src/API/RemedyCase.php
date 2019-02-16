@@ -28,7 +28,7 @@ abstract class RemedyCase
 
     /**
      * Maps field names on the API create interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $createInterfaceFieldMap = [];
@@ -37,17 +37,17 @@ abstract class RemedyCase
      * Contains the default fields for the create interface / TODO: explain this
      */
     protected static $createInterfaceDefaultFields = [];
-    
+
     /**
      * Contains default values of some fields on the create interface
-     * 
+     *
      * Follows the format Normalized Field Name => Value
      */
     protected static $createInterfaceDefaultValues = [];
 
     /**
      * Maps field names on the API standard interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $standardInterfaceFieldMap = [];
@@ -69,10 +69,10 @@ abstract class RemedyCase
 
     /**
      * Initiates a login request with the API
-     * 
+     *
      * @param string $username API username
      * @param string $password API password
-     * 
+     *
      * @return void
      */
     public function login($username, $password)
@@ -91,7 +91,7 @@ abstract class RemedyCase
 
     /**
      * Returns the API server to use based on the local environment
-     * 
+     *
      * @return string
      */
     public static function getServer()
@@ -111,12 +111,12 @@ abstract class RemedyCase
 
     /**
      * Performs a request against the API
-     * 
+     *
      * @param string $method The HTTP method verb to use for the request
      * @param string $url The API route to request
      * @param array $args Arguments passed on to Guzzle Client
      * @param array $headers HTTP headers to pass to the request
-     * 
+     *
      * @return \GuzzleHttp\Response
      */
     public function request($method, $url, $args = [], $headers = [])
@@ -153,10 +153,10 @@ abstract class RemedyCase
 
     /**
      * Gets the variant field name from the normalized field name from the specified map
-     * 
+     *
      * @param string $normalizedField The normalized field name to transform
      * @param array $map The field map to use for the transformation
-     * 
+     *
      * @return string
      */
     public function getVariantFieldName($normalizedField, $map)
@@ -167,16 +167,16 @@ abstract class RemedyCase
         $normalizedField = str_replace("_", " ", $normalizedField);
 
         \Log::info("Normalized $normalizedField");
-        
+
         return $normalizedField;
     }
 
     /**
      * Normalizes the specified field name
-     * 
+     *
      * @param string $field The field name to normalize
      * @param array $map The field map to use to normalize
-     * 
+     *
      * @return string
      */
     public function getNormalizedFieldName($field, $map)
@@ -195,9 +195,9 @@ abstract class RemedyCase
 
     /**
      * Normalize field using the create interface field map
-     * 
+     *
      * @param string $field The field to normalize
-     * 
+     *
      * @return string
      */
     public function getNormalizedCreateInterfaceFieldName($field)
@@ -207,9 +207,9 @@ abstract class RemedyCase
 
     /**
      * Normalize field using the standard interface field map
-     * 
+     *
      * @param string $field The field to normalize
-     * 
+     *
      * @return string
      */
     public function getNormalizedStandardInterfaceFieldName($field)
@@ -219,9 +219,9 @@ abstract class RemedyCase
 
     /**
      * Get variant field from normalized field using the create interface field map
-     * 
+     *
      * @param string $normalizedField The field to transform
-     * 
+     *
      * @return string
      */
     public function getCreateInterfaceVariantFieldName($normalizedField)
@@ -231,9 +231,9 @@ abstract class RemedyCase
 
     /**
      * Get variant field from normalized field using the standard interface field map
-     * 
+     *
      * @param string $normalizedField The field to transform
-     * 
+     *
      * @return string
      */
     public function getStandardInterfaceVariantFieldName($normalizedField)
@@ -243,10 +243,10 @@ abstract class RemedyCase
 
     /**
      * Transform normalized data into variant data using the specified field map
-     * 
+     *
      * @param array $normalizedData The data to transform
      * @param array $map The field map to use for the transformation
-     * 
+     *
      * @return array
      */
     public function transformNormalizedData($normalizedData, $map)
@@ -262,16 +262,16 @@ abstract class RemedyCase
 
     /**
      * Transform variant data into normalized data using the specified field map
-     * 
+     *
      * @param array $variantData The data to transform
      * @param array $map The field map to use for the transformation
-     * 
+     *
      * @return array
      */
     public function normalizeVariantData($variantData, $map)
     {
         $normalizedData = [];
-        
+
         foreach($variantData as $key => $value)
         {
             $normalizedData[$this->getNormalizedFieldName($key, $map)] = $value;
@@ -282,9 +282,9 @@ abstract class RemedyCase
 
     /**
      * Transform normalized data into variant data using the create interface field map
-     * 
+     *
      * @param array $normalizedData The data to transform
-     * 
+     *
      * @return array
      */
     public function transformNormalizedCreateInterfaceData($normalizedData)
@@ -294,9 +294,9 @@ abstract class RemedyCase
 
     /**
      * Transform normalized data into variant data using the standard interface field map
-     * 
+     *
      * @param array $normalizedData The data to transform
-     * 
+     *
      * @return array
      */
     public function transformNormalizedStandardInterfaceData($normalizedData)
@@ -306,9 +306,9 @@ abstract class RemedyCase
 
     /**
      * Transform variant data into normalized data using the create interface field map
-     * 
+     *
      * @param array $variantData The data to transform
-     * 
+     *
      * @return array
      */
     public function normalizeVariantCreateInterfaceData($variantData)
@@ -318,9 +318,9 @@ abstract class RemedyCase
 
     /**
      * Transform variant data into normalized data using the standard interface field map
-     * 
+     *
      * @param array $variantData The data to transform
-     * 
+     *
      * @return array
      */
     public function normalizeVariantStandardInterfaceData($variantData)
@@ -330,9 +330,9 @@ abstract class RemedyCase
 
     /**
      * Performs an update operation against the API on the current instance
-     * 
+     *
      * @param array $normalizedData The normalized data to use for the update operation
-     * 
+     *
      * @return bool
      */
     public function update($normalizedData)
@@ -359,7 +359,7 @@ abstract class RemedyCase
 
     /**
      * Get full name of API standard interface
-     * 
+     *
      * @return string
      */
     public function getStandardInterface()
@@ -369,7 +369,7 @@ abstract class RemedyCase
 
     /**
      * Get full name of API create interface
-     * 
+     *
      * @return string
      */
     public function getCreateInterface()
@@ -379,11 +379,11 @@ abstract class RemedyCase
 
     /**
      * Performs a create operation against the API
-     * 
+     *
      * Will supplement the provided data with data from static::$createInterfaceDefaultValues for the fields that are not specified
-     * 
+     *
      * @param array $normalizedData The normalized data to use for the create operation
-     * 
+     *
      * @return string InstanceId
      */
     public function create($normalizedData)
@@ -431,7 +431,7 @@ abstract class RemedyCase
                     if(!isset($caseData->values) && !isset($caseData->values->InstanceId))
                         throw new RemedyApiException(null, $retrieveCaseDataRequest, "Missing InstanceId in case data");
 
-                    return $caseData->values->InstanceId;
+                    return $this->model->newQuery()->find($caseData->values->InstanceId);
                 }
                 else
                 {
