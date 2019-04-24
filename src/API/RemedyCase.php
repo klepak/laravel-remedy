@@ -328,6 +328,11 @@ abstract class RemedyCase
         return $this->normalizeVariantData($variantData, static::$standardInterfaceFieldMap);
     }
 
+    public function getUpdateInterfaceUrl()
+    {
+        return "/api/arsys/v1/entry/{$this->getStandardInterface()}/{$this->model->Entry_ID}|{$this->model->Entry_ID}";
+    }
+
     /**
      * Performs an update operation against the API on the current instance
      *
@@ -345,7 +350,7 @@ abstract class RemedyCase
             ]
         ];
 
-        $res = $this->request('PUT', "/api/arsys/v1/entry/{$this->getStandardInterface()}/{$this->model->Entry_ID}|{$this->model->Entry_ID}", $args);
+        $res = $this->request('PUT', $this->getUpdateInterfaceUrl(), $args);
 
         if($res->getStatusCode() == 204)
         {

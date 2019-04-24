@@ -14,7 +14,7 @@ class Task extends RemedyCase
 
     /**
      * Maps field names on the API create interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $createInterfaceFieldMap = [
@@ -23,15 +23,20 @@ class Task extends RemedyCase
 
     /**
      * Maps field names on the API standard interface to normalized field names
-     * 
+     *
      * Follows the format Normalized Field Name => Type-Specific Variant Field Name
      */
     protected static $standardInterfaceFieldMap = [
-		
+
     ];
 
     public function getCreateInterface()
     {
         return $this->getStandardInterface();
+    }
+
+    public function getUpdateInterfaceUrl()
+    {
+        return "/api/arsys/v1/entry/{$this->getStandardInterface()}/{$this->model->Task_ID}";
     }
 }
